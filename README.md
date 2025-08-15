@@ -1,8 +1,8 @@
 # COVID-19 Analytics Pipeline
-## dbt-core + Airbyte 
+## dbt-core + Airbyte
 
-### Pipeline Overzicht
-**Use Case**: Dagelijkse COVID-19 statistieken voor Nederlandse GGD regio's analyseren voor beleidsbeslissingen.
+### Pipeline Overview
+**Use Case**: Daily COVID-19 statistics for Dutch GGD regions to support policy decisions.
 
 **Data Flow**:
 ```
@@ -11,15 +11,15 @@ COVID-19 API → Airbyte → PostgreSQL → dbt → Analytics Dashboard
 
 ---
 
-## Data Architectuur
+## Data Architecture
 
-### Bron
+### Source
 - **RIVM COVID-19 API**: https://data.rivm.nl/covid-19/
-- **Dataset**: Dagelijkse nieuwe gevallen per GGD regio
+- **Dataset**: Daily new cases per GGD region
 - **Format**: JSON via REST API
-- **Update frequentie**: Dagelijks om 15:30
+- **Update frequency**: Daily at 15:30
 
-### Bestemming  
+### Destination  
 - **PostgreSQL**: Data warehouse
 - **Schema**: `analytics.covid_daily_summary`
 
@@ -36,14 +36,14 @@ COVID-19 API → Airbyte → PostgreSQL → dbt → Analytics Dashboard
 git clone <your-repo-url>
 cd dbt_etl_corona_hc
 
-# Run setup 
+# Run setup
 chmod +x setup.sh
 ./setup.sh
 ```
 
 ### 2. Quick Restart (After PC restart)
 ```bash
-# Quick restart 
+# Quick restart
 chmod +x quick_start.sh
 ./quick_start.sh
 ```
@@ -63,7 +63,7 @@ dbt docs serve
 
 ---
 
-## Airbyte Configuratie
+## Airbyte Configuration
 
 ### Source: HTTP API Connector
 ```yaml
@@ -108,7 +108,7 @@ connection:
 
 ## dbt Models
 
-### Project Structuur
+### Project Structure
 ```
 covid_analytics/
 ├── dbt_project.yml
@@ -131,34 +131,34 @@ covid_analytics/
 ```
 
 ### 1. Sources & Staging
-- **`_sources.yml`**: Definieert de raw data bron met validaties
-- **`schema.yml`**: Model en kolom documentatie
-- **`stg_covid_daily.sql`**: Data cleaning, type casting en null handling
+- **`_sources.yml`**: Defines raw data source with validations
+- **`schema.yml`**: Model and column documentation
+- **`stg_covid_daily.sql`**: Data cleaning, type casting and null handling
 
 ### 2. Mart Model
-- **`mart_covid_summary.sql`**: Business logic met:
-  - Dagelijkse nieuwe gevallen (delta's)
-  - 7-daags gemiddelde voor trend analyse
-  - Risk level categorisatie (LOW/MEDIUM/HIGH)
+- **`mart_covid_summary.sql`**: Business logic with:
+  - Daily new cases (deltas)
+  - 7-day moving average for trend analysis
+  - Risk level categorization (LOW/MEDIUM/HIGH)
 
 ---
 
-## Pipeline Toelichting
+## Pipeline Explanation
 
-### Data Transformaties
+### Data Transformations
 ```
 Raw API Data → Staging (cleaning) → Mart (business logic)
 
-Stap 1: Data typing en null handling
-Stap 2: Dagelijkse nieuwe gevallen berekenen (delta's)  
-Stap 3: 7-daags gemiddelde voor trend analyse
-Stap 4: Risk level categorisatie voor beleid
+Step 1: Data typing and null handling
+Step 2: Calculate daily new cases (deltas)  
+Step 3: 7-day moving average for trend analysis
+Step 4: Risk level categorization for policy
 ```
 
 ### Business Value
-- **Dagelijkse monitoring**: Automatisch dashboard voor GGD's
-- **Trend analyse**: 7-daags gemiddelde voor beleidsbeslissingen  
-- **Alerting**: Risk levels voor vroege waarschuwing
+- **Daily monitoring**: Automated dashboard for GGDs
+- **Trend analysis**: 7-day average for policy decisions  
+- **Alerting**: Risk levels for early warning
 
 ---
 
@@ -179,6 +179,8 @@ SELECT COUNT(*) FROM analytics.mart_covid_summary;
 # See final analytics
 dbt show --select mart_covid_summary
 ```
+
+---
 
 ## Documentation
 
@@ -219,3 +221,4 @@ docker-compose down -v
 - **Database**: Check Docker logs with `docker-compose logs postgres`
 
 ---
+
