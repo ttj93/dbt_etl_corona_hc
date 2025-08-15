@@ -1,0 +1,19 @@
+source:
+  name: "rivm-covid-api"
+  source_type: "http-api"
+  configuration:
+    name: "COVID-19 RIVM"
+    base_url: "https://data.rivm.nl/covid-19"
+    path: "/COVID-19_aantallen_gemeente_cumulatief.json"
+    http_method: "GET"
+    
+    # Schema definitie
+    response_schema:
+      type: "object"
+      properties:
+        Date_of_publication: {"type": "string"}
+        Municipality_name: {"type": "string"} 
+        Province: {"type": "string"}
+        Total_reported: {"type": "integer"}
+        Hospital_admission: {"type": "integer"}
+        Deceased: {"type": "integer"} 

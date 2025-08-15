@@ -1,0 +1,15 @@
+version: 2
+sources:
+  - name: raw_covid
+    description: "Raw COVID data from RIVM API"
+    database: covid_analytics
+    schema: raw_data
+    tables:
+      - name: covid_19_aantallen_gemeente_cumulatief
+        columns:
+          - name: Date_of_publication
+            tests: [not_null]
+          - name: Municipality_name  
+            tests: [not_null]
+          - name: Total_reported
+            tests: [not_null] 

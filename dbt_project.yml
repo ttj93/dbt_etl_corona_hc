@@ -1,0 +1,13 @@
+name: 'covid_analytics'
+version: '1.0.0'
+profile: 'covid_analytics'
+
+model-paths: ["models"]
+target-path: "target"
+
+models:
+  covid_analytics:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table 

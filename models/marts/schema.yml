@@ -1,0 +1,27 @@
+version: 2
+models:
+  - name: mart_covid_summary
+    description: "Daily province-level COVID summary with new cases, 7-day averages, and a simple risk classification."
+    columns:
+      - name: report_date
+        description: "Report date for the metrics."
+        tests: [not_null]
+      - name: province
+        description: "Province name."
+        tests: [not_null]
+      - name: province_total_cases
+        description: "Cumulative total reported cases aggregated at province-level."
+      - name: new_cases_daily
+        description: "New cases for the province compared to the previous day (delta)."
+      - name: avg_7day_new_cases
+        description: "7-day moving average of new daily cases for the province."
+      - name: province_hospital_admissions
+        description: "Cumulative hospital admissions aggregated at province-level."
+      - name: new_admissions_daily
+        description: "New hospital admissions compared to the previous day (delta)."
+      - name: province_deaths
+        description: "Cumulative deaths aggregated at province-level."
+      - name: municipalities_count
+        description: "Number of municipalities contributing to the province metrics on that date."
+      - name: risk_level
+        description: "Simple risk classification based on 7-day average of new cases (LOW/MEDIUM/HIGH)." 

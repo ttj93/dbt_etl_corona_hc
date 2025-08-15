@@ -1,0 +1,95 @@
+name: dbt CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: covid_analytics
+          POSTGRES_USER: airbyte
+          POSTGRES_PASSWORD: airbyte123
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dbt
+      run: |
+        pip install dbt-core dbt-postgres
+    
+    - name: Create dbt profile
+      run: |
+        mkdir -p ~/.dbt
+        cat > ~/.dbt/profiles.yml << EOF
+        covid_analytics:
+          target: ci
+          outputs:
+            ci:
+              type: postgres
+              host: localhost
+              port: 5432
+              user: airbyte
+              pass: "airbyte123"
+              dbname: covid_analytics
+              schema: analytics
+              threads: 4
+        EOF
+    
+    - name: Wait for postgres
+      run: sleep 15
+    
+    - name: Setup database
+      run: |
+        docker run --rm --network host postgres:15 psql -h localhost -U airbyte -d covid_analytics -c "
+        CREATE SCHEMA IF NOT EXISTS raw_data;
+        CREATE SCHEMA IF NOT EXISTS analytics;
+        CREATE TABLE IF NOT EXISTS raw_data.covid_19_aantallen_gemeente_cumulatief (
+          Date_of_publication VARCHAR(50),
+          Municipality_name VARCHAR(100),
+          Province VARCHAR(100),
+          Total_reported INTEGER,
+          Hospital_admission INTEGER,
+          Deceased INTEGER,
+          _airbyte_extracted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        INSERT INTO raw_data.covid_19_aantallen_gemeente_cumulatief 
+        (Date_of_publication, Municipality_name, Province, Total_reported, Hospital_admission, Deceased) VALUES
+        ('2024-12-01', 'Amsterdam', 'Noord-Holland', 1500, 45, 12),
+        ('2024-12-02', 'Amsterdam', 'Noord-Holland', 1550, 48, 13),
+        ('2024-12-03', 'Amsterdam', 'Noord-Holland', 1580, 50, 14);
+        "
+    
+    - name: Run dbt
+      run: |
+        dbt deps
+        dbt run
+        dbt test
+    
+    - name: Generate docs
+      run: dbt docs generate
+    
+    - name: Upload docs artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dbt-docs
+        path: target/ 

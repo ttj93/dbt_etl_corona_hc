@@ -1,0 +1,20 @@
+version: 2
+models:
+  - name: stg_covid_daily
+    description: "Staging view for COVID data from the RIVM API, with cleaned types and null-handling."
+    columns:
+      - name: report_date
+        description: "Publication date of the report."
+        tests: [not_null]
+      - name: municipality
+        description: "Municipality name."
+      - name: province
+        description: "Province name."
+      - name: total_cases
+        description: "Cumulative total reported cases up to and including report_date."
+      - name: hospital_admissions
+        description: "Cumulative hospital admissions up to and including report_date."
+      - name: deaths
+        description: "Cumulative deaths up to and including report_date."
+      - name: extracted_at
+        description: "Timestamp when the record was extracted by Airbyte." 

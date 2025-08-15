@@ -1,0 +1,6 @@
+connection:
+  name: "covid-daily-sync"
+  source: "rivm-covid-api"
+  destination: "postgres-warehouse"
+  sync_frequency: "0 16 * * *"  # Daily at 4 PM
+  destination_namespace: "mirror_source" 

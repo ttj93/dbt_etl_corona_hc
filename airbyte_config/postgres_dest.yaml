@@ -1,0 +1,10 @@
+destination:
+  name: "postgres-warehouse"
+  destination_type: "postgres"
+  configuration:
+    host: "localhost"
+    port: 5432
+    database: "covid_analytics"
+    schema: "raw_data"
+    username: "airbyte"
+    password: "${POSTGRES_PASSWORD}" 
