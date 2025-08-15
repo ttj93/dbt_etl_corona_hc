@@ -1,5 +1,5 @@
 # COVID-19 Analytics Pipeline
-## dbt-core + Airbyte (45 minuten implementatie)
+## dbt-core + Airbyte 
 
 ### Pipeline Overzicht
 **Use Case**: Dagelijkse COVID-19 statistieken voor Nederlandse GGD regio's analyseren voor beleidsbeslissingen.
@@ -36,14 +36,14 @@ COVID-19 API → Airbyte → PostgreSQL → dbt → Analytics Dashboard
 git clone <your-repo-url>
 cd dbt_etl_corona_hc
 
-# Run setup (15 minutes)
+# Run setup 
 chmod +x setup.sh
 ./setup.sh
 ```
 
 ### 2. Quick Restart (After PC restart)
 ```bash
-# Quick restart (2 minutes)
+# Quick restart 
 chmod +x quick_start.sh
 ./quick_start.sh
 ```
@@ -145,11 +145,6 @@ covid_analytics/
 
 ## Pipeline Toelichting
 
-### Waarom deze Pipeline?
-1. **Relevantie**: COVID data is actueel en maatschappelijk relevant
-2. **Simpliciteit**: 1 databron, duidelijke transformaties
-3. **Schaalbaarheid**: Makkelijk uit te breiden met meer metrics
-
 ### Data Transformaties
 ```
 Raw API Data → Staging (cleaning) → Mart (business logic)
@@ -184,28 +179,6 @@ SELECT COUNT(*) FROM analytics.mart_covid_summary;
 # See final analytics
 dbt show --select mart_covid_summary
 ```
-
----
-
-## Why This Works for Time Constraints
-
-### Snel te implementeren (45 min)
-- **Bekende API**: RIVM is reliable en goed gedocumenteerd
-- **Simple schema**: Geen complexe joins of business rules
-- **Standard transformaties**: Delta berekeningen en aggregaties
-
-### Voldoet aan alle criteria
-- **Modulariteit**: Staging + Mart layers
-- **Airbyte begrip**: HTTP connector met schema definitie  
-- **Documentatie**: Duidelijke uitleg van keuzes
-- **Creativiteit**: Relevante use case met business impact
-
-### Laat tijd over voor opdracht 2 & 3
-- Monitoring hooks kunnen worden toegevoegd
-- AWS deployment is straightforward uitbreiding
-- Focus op core functionality eerste
-
----
 
 ## Documentation
 
@@ -246,5 +219,3 @@ docker-compose down -v
 - **Database**: Check Docker logs with `docker-compose logs postgres`
 
 ---
-
-**Ready for opdracht 2 (monitoring) en 3 (AWS integratie)!**
